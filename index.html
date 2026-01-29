@@ -1,0 +1,4135 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মেহেদী টেইলার্স & ফেব্রিক্স - পূর্ণাঙ্গ ব্যবস্থাপনা সিস্টেম</title>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#2c3e50">
+    <!-- iOS Support -->
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Windows Metro -->
+    <meta name="msapplication-navbutton-color" content="#2c3e50">
+    <meta name="msapplication-TileColor" content="#2c3e50">
+    <meta name="msapplication-TileImage" content="icon-144x144.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS Variables ===== */
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #3a506b;
+            --secondary: #3498db;
+            --secondary-light: #5dade2;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --gray: #7f8c8d;
+            --border: #e0e0e0;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --radius: 10px;
+            --transition: all 0.3s ease;
+        }
+
+        /* ===== Global Reset ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Kalpurush', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            min-height: 100vh;
+            direction: ltr;
+            overflow-x: hidden;
+        }
+
+        /* ===== Scrollbar Styling ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-light);
+        }
+
+        /* ===== Sidebar Navigation ===== */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 260px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            z-index: 1000;
+            transition: var(--transition);
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            color: var(--secondary-light);
+            min-width: 40px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .logo-subtext {
+            font-size: 11px;
+            opacity: 0.9;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed .logo-text,
+        .sidebar.collapsed .logo-subtext {
+            display: none;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            right: -12px;
+            top: 30px;
+            background: var(--secondary);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .toggle-btn:hover {
+            background: var(--secondary-light);
+            transform: rotate(180deg);
+        }
+
+        .sidebar.collapsed .toggle-btn {
+            right: -12px;
+            transform: rotate(180deg);
+        }
+
+        .sidebar.collapsed .toggle-btn:hover {
+            transform: rotate(0deg);
+        }
+
+        /* ===== Navigation Menu ===== */
+        .nav-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding-left: 25px;
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-left: 4px solid var(--secondary-light);
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--secondary-light);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .nav-text {
+            font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+
+        /* Badge for notifications */
+        .nav-badge {
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: auto;
+        }
+
+        .sidebar.collapsed .nav-badge {
+            display: none;
+        }
+
+        /* Submenu */
+        .submenu {
+            padding-left: 60px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .submenu.active {
+            max-height: 500px;
+        }
+
+        .submenu .nav-link {
+            padding: 12px 20px;
+            font-size: 14px;
+        }
+
+        .submenu .nav-link:hover {
+            padding-left: 25px;
+        }
+
+        /* ===== Quick Stats in Sidebar ===== */
+        .sidebar-stats {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .sidebar.collapsed .sidebar-stats {
+            display: none;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .stat-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--secondary-light);
+        }
+
+        /* ===== Main Content Adjustment ===== */
+        .main-content {
+            margin-left: 260px;
+            transition: var(--transition);
+            padding: 20px;
+            max-width: calc(100% - 260px);
+        }
+
+        .main-content.expanded {
+            margin-left: 70px;
+            max-width: calc(100% - 70px);
+        }
+
+        /* ===== Mobile Menu Button ===== */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 999;
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ===== Profile Section ===== */
+        .profile-section {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .profile-role {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .sidebar.collapsed .profile-info {
+            display: none;
+        }
+
+        /* ===== Search in Sidebar ===== */
+        .sidebar-search {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .search-container input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .sidebar.collapsed .sidebar-search {
+            display: none;
+        }
+
+        /* ===== Bottom Actions ===== */
+        .sidebar-bottom {
+            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar.collapsed .sidebar-bottom {
+            display: none;
+        }
+
+        .bottom-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .bottom-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .bottom-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .bottom-btn i {
+            font-size: 14px;
+        }
+
+        /* ===== Active Tab Indicator ===== */
+        .active-tab-indicator {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--secondary-light);
+            border-radius: 50%;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .nav-link.active .active-tab-indicator {
+            opacity: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(52, 152, 219, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
+        }
+
+        /* ===== Dashboard Header ===== */
+        .dashboard-header {
+            background: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .welcome-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .welcome-text h1 {
+            color: var(--primary);
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .welcome-text p {
+            color: var(--gray);
+            font-size: 16px;
+        }
+
+        .date-time {
+            background: var(--light);
+            padding: 10px 20px;
+            border-radius: 6px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        /* ===== Stats Cards ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .stat-card.sales::before { background: var(--success); }
+        .stat-card.advance::before { background: var(--warning); }
+        .stat-card.due::before { background: var(--danger); }
+        .stat-card.balance::before { background: var(--secondary); }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .stat-card.sales .stat-icon { background: rgba(39, 174, 96, 0.1); color: var(--success); }
+        .stat-card.advance .stat-icon { background: rgba(243, 156, 18, 0.1); color: var(--warning); }
+        .stat-card.due .stat-icon { background: rgba(231, 76, 60, 0.1); color: var(--danger); }
+        .stat-card.balance .stat-icon { background: rgba(52, 152, 219, 0.1); color: var(--secondary); }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* ===== Quick Actions ===== */
+        .quick-actions {
+            background: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--secondary);
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: var(--light);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+        }
+
+        .action-btn:hover {
+            background: white;
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .action-btn:nth-child(1) .action-icon { background: rgba(52, 152, 219, 0.1); color: var(--secondary); }
+        .action-btn:nth-child(2) .action-icon { background: rgba(39, 174, 96, 0.1); color: var(--success); }
+        .action-btn:nth-child(3) .action-icon { background: rgba(243, 156, 18, 0.1); color: var(--warning); }
+        .action-btn:nth-child(4) .action-icon { background: rgba(231, 76, 60, 0.1); color: var(--danger); }
+
+        .action-text h3 {
+            font-size: 16px;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .action-text p {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* ===== Tables ===== */
+        .table-container {
+            background: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .table-title {
+            color: var(--primary);
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            color: white;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        td {
+            padding: 15px;
+            color: var(--dark);
+        }
+
+        /* ===== Status Badges ===== */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-cutting { background: #d1ecf1; color: #0c5460; }
+        .status-sewing { background: #d4edda; color: #155724; }
+        .status-ready { background: #cce5ff; color: #004085; }
+        .status-delivered { background: #d1e7dd; color: #0f5132; }
+
+        /* ===== Action Buttons ===== */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary { background: var(--secondary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-info { background: var(--info); color: white; }
+        .btn-light { background: var(--light); color: var(--dark); }
+
+        .btn-sm { padding: 5px 10px; font-size: 12px; }
+        .btn-lg { padding: 12px 24px; font-size: 16px; }
+
+        /* ===== Modal ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        /* ===== Forms ===== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        label i {
+            color: var(--secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group .form-control {
+            padding-left: 40px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            color: var(--gray);
+        }
+
+        /* ===== Tab Content ===== */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== Slider ===== */
+        .slider-container {
+            background: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .slide-title {
+            color: var(--primary);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .slide-content {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .slider-btn {
+            background: var(--light);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider-btn:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .slider-dots {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider-dot.active {
+            background: var(--secondary);
+            transform: scale(1.2);
+        }
+
+        /* ===== Print Styles ===== */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            .print-content, .print-content * {
+                visibility: visible;
+            }
+            
+            .print-content {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding: 20px;
+                background: white;
+                color: black;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            
+            table, th, td {
+                border: 1px solid black;
+            }
+            
+            th, td {
+                padding: 8px;
+                text-align: left;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+        /* ===== Toast Notification ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 300px;
+            transform: translateX(100%);
+            opacity: 0;
+            animation: slideIn 0.3s forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        .toast.success .toast-icon { color: var(--success); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.warning .toast-icon { color: var(--warning); }
+
+        .toast-content h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .toast-content p {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .toast-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        /* ===== Confirmation Modal ===== */
+        .confirmation-modal .modal-content {
+            max-width: 400px;
+        }
+
+        .confirmation-body {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .confirmation-icon {
+            font-size: 48px;
+            color: var(--danger);
+            margin-bottom: 20px;
+        }
+
+        .confirmation-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        /* ===== Notification Items ===== */
+        .notification-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: var(--light);
+            border-radius: 6px;
+            border-left: 4px solid var(--secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-item:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+        }
+
+        .notification-category {
+            margin-bottom: 25px;
+        }
+
+        .search-result-item {
+            transition: var(--transition);
+        }
+
+        .search-result-item:hover {
+            background: var(--light);
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 20px 20px 20px 80px;
+            }
+            
+            .main-content.expanded {
+                margin-left: 0;
+                max-width: 100%;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .toggle-btn {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                max-width: 320px;
+            }
+            
+            .mobile-menu-btn {
+                left: 10px;
+                top: 10px;
+            }
+            
+            .main-content {
+                padding: 20px 15px 20px 70px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                min-width: 100%;
+            }
+            
+            .welcome-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .date-time {
+                width: 100%;
+            }
+        }
+
+        /* ===== Utility Classes ===== */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-warning { color: var(--warning); }
+        .mb-3 { margin-bottom: 15px; }
+        .mb-4 { margin-bottom: 20px; }
+        .mt-3 { margin-top: 15px; }
+        .mt-4 { margin-top: 20px; }
+        .d-flex { display: flex; }
+        .align-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 10px; }
+        .w-100 { width: 100%; }
+    </style>
+</head>
+<body>
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-vest logo-icon"></i>
+            <div>
+                <div class="logo-text">মেহেদী টেইলার্স</div>
+                <div class="logo-subtext">পূর্ণাঙ্গ ব্যবস্থাপনা</div>
+            </div>
+        </div>
+        
+        <button class="toggle-btn" id="toggleBtn">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <!-- Search in Sidebar -->
+        <div class="sidebar-search">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="sidebarSearch" placeholder="খুঁজুন...">
+            </div>
+        </div>
+        
+        <!-- Navigation Menu -->
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="javascript:void(0)" class="nav-link active" onclick="switchTab('dashboard')">
+                    <i class="fas fa-tachometer-alt nav-icon"></i>
+                    <span class="nav-text">ড্যাশবোর্ড</span>
+                    <span class="active-tab-indicator"></span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="javascript:void(0)" class="nav-link" onclick="switchTab('orders')">
+                    <i class="fas fa-shopping-cart nav-icon"></i>
+                    <span class="nav-text">অর্ডার ব্যবস্থাপনা</span>
+                    <span class="nav-badge" id="pendingOrdersBadge">0</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="javascript:void(0)" class="nav-link" onclick="switchTab('customers')">
+                    <i class="fas fa-users nav-icon"></i>
+                    <span class="nav-text">গ্রাহক ব্যবস্থাপনা</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="javascript:void(0)" class="nav-link" onclick="switchTab('workers')">
+                    <i class="fas fa-user-tie nav-icon"></i>
+                    <span class="nav-text">কর্মী ব্যবস্থাপনা</span>
+                    <span class="nav-badge" id="workerDueBadge">0</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="javascript:void(0)" class="nav-link" onclick="switchTab('inventory')">
+                    <i class="fas fa-boxes nav-icon"></i>
+                    <span class="nav-text">ইনভেন্টরি</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="javascript:void(0)" class="nav-link" onclick="switchTab('reports')">
+                    <i class="fas fa-chart-bar nav-icon"></i>
+                    <span class="nav-text">রিপোর্ট & এনালাইসিস</span>
+                    <i class="fas fa-chevron-right" style="margin-left: auto; font-size: 12px;"></i>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="javascript:void(0)" class="nav-link" onclick="switchTab('accounting')">
+                    <i class="fas fa-calculator nav-icon"></i>
+                    <span class="nav-text">অ্যাকাউন্টিং</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="javascript:void(0)" class="nav-link" onclick="switchTab('settings')">
+                    <i class="fas fa-cog nav-icon"></i>
+                    <span class="nav-text">সেটিংস</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="javascript:void(0)" class="nav-link" onclick="showBackupModal()">
+                    <i class="fas fa-database nav-icon"></i>
+                    <span class="nav-text">ব্যাকআপ & রিস্টোর</span>
+                </a>
+            </li>
+        </ul>
+        
+        <!-- Quick Stats -->
+        <div class="sidebar-stats">
+            <div class="stat-item">
+                <span class="stat-label">আজকের বিক্রয়</span>
+                <span class="stat-value" id="sidebarTodaySales">৳ 0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">বাকি আদায়</span>
+                <span class="stat-value" id="sidebarDueCollection">৳ 0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">অপেক্ষারত অর্ডার</span>
+                <span class="stat-value" id="sidebarPendingOrders">0</span>
+            </div>
+        </div>
+        
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="profile-img">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name">এডমিন</div>
+                <div class="profile-role">ম্যানেজার</div>
+            </div>
+            <a href="javascript:void(0)" onclick="logout()" style="color: rgba(255,255,255,0.7);">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+        
+        <!-- Bottom Actions -->
+        <div class="sidebar-bottom">
+            <div class="bottom-actions">
+                <button class="bottom-btn" onclick="quickAddOrder()">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>দ্রুত অর্ডার</span>
+                </button>
+                <button class="bottom-btn" onclick="quickPayment()">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>পেমেন্ট</span>
+                </button>
+                <button class="bottom-btn" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span>নোটিফিকেশন</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content" id="mainContent">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="welcome-section">
+                    <div class="welcome-text">
+                        <h1>স্বাগতম, মেহেদী টেইলার্স</h1>
+                        <p>আপনার ব্যবসার সম্পূর্ণ নিয়ন্ত্রণ আপনার হাতের মুঠোয়</p>
+                    </div>
+                    <div class="date-time">
+                        <div id="currentDateTime"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card sales">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-value" id="totalSale">৳ 0</div>
+                    <div class="stat-label">মোট বিক্রয়</div>
+                </div>
+                <div class="stat-card advance">
+                    <div class="stat-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="stat-value" id="totalAdvance">৳ 0</div>
+                    <div class="stat-label">মোট অগ্রিম</div>
+                </div>
+                <div class="stat-card due">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-value" id="totalDue">৳ 0</div>
+                    <div class="stat-label">বাকি টাকা</div>
+                </div>
+                <div class="stat-card balance">
+                    <div class="stat-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="stat-value" id="netBalance">৳ 0</div>
+                    <div class="stat-label">নেট ব্যালেন্স</div>
+                </div>
+            </div>
+
+            <!-- Slider -->
+            <div class="slider-container">
+                <div class="slider" id="slider">
+                    <div class="slide">
+                        <h3 class="slide-title">আজকের বিশেষ অফার</h3>
+                        <p class="slide-content">সমস্ত সেলাই কাজে ১০% ছাড় চলছে! শুধুমাত্র আজ</p>
+                    </div>
+                    <div class="slide">
+                        <h3 class="slide-title">নতুন গ্রাহকদের জন্য</h3>
+                        <p class="slide-content">প্রথম অর্ডারে ১৫% ছাড় এবং বিনামূল্যে ডেলিভারি</p>
+                    </div>
+                    <div class="slide">
+                        <h3 class="slide-title">কর্মীদের জন্য নিয়ম</h3>
+                        <p class="slide-content">সময়মতো কাজ শেষ করলে অতিরিক্ত বোনাস দেওয়া হবে</p>
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-btn" onclick="prevSlide()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="slider-btn" onclick="nextSlide()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    দ্রুত কর্ম
+                </h2>
+                <div class="actions-grid">
+                    <div class="action-btn" onclick="openOrderModal()">
+                        <div class="action-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="action-text">
+                            <h3>নতুন অর্ডার</h3>
+                            <p>গ্রাহকের নতুন অর্ডার যোগ করুন</p>
+                        </div>
+                    </div>
+                    <div class="action-btn" onclick="openWorkerModal()">
+                        <div class="action-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="action-text">
+                            <h3>নতুন কর্মী</h3>
+                            <p>নতুন কর্মী নিয়োগ করুন</p>
+                        </div>
+                    </div>
+                    <div class="action-btn" onclick="openWorkerTransactionModal()">
+                        <div class="action-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="action-text">
+                            <h3>লেনদেন যোগ</h3>
+                            <p>কর্মী লেনদেন যোগ করুন</p>
+                        </div>
+                    </div>
+                    <div class="action-btn" onclick="generateDailyReport()">
+                        <div class="action-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="action-text">
+                            <h3>দৈনিক রিপোর্ট</h3>
+                            <p>আজকের রিপোর্ট দেখুন</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2 class="table-title">
+                        <i class="fas fa-history"></i>
+                        সাম্প্রতিক অর্ডার
+                    </h2>
+                    <div class="table-controls">
+                        <button class="btn btn-primary" onclick="switchTab('orders')">
+                            <i class="fas fa-eye"></i>
+                            সব দেখুন
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>অর্ডার আইডি</th>
+                                <th>গ্রাহক</th>
+                                <th>আইটেম</th>
+                                <th>মোট</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>ডেলিভারি তারিখ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentOrders"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders" class="tab-content">
+            <div class="table-container">
+                <div class="table-header">
+                    <h2 class="table-title">
+                        <i class="fas fa-shopping-cart"></i>
+                        অর্ডার ব্যবস্থাপনা
+                    </h2>
+                    <div class="table-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="অর্ডার খুঁজুন...">
+                        </div>
+                        <select class="form-control" id="statusFilter" style="min-width: 150px;">
+                            <option value="">সব স্ট্যাটাস</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Cutting">Cutting</option>
+                            <option value="Sewing">Sewing</option>
+                            <option value="Ready">Ready</option>
+                            <option value="Delivered">Delivered</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="openOrderModal()">
+                            <i class="fas fa-plus"></i>
+                            নতুন অর্ডার
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>অর্ডার আইডি</th>
+                                <th>গ্রাহক নাম</th>
+                                <th>ফোন</th>
+                                <th>আইটেম</th>
+                                <th>মোট</th>
+                                <th>অগ্রিম</th>
+                                <th>বাকি</th>
+                                <th>ডেলিভারি তারিখ</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>কর্ম</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers Tab -->
+        <div id="customers" class="tab-content">
+            <div class="table-container">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i>
+                    গ্রাহক ব্যবস্থাপনা
+                </h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>নাম</th>
+                                <th>ফোন</th>
+                                <th>ঠিকানা</th>
+                                <th>মোট অর্ডার</th>
+                                <th>মোট খরচ</th>
+                                <th>বাকি টাকা</th>
+                                <th>কর্ম</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerTableBody">
+                            <tr>
+                                <td colspan="7" class="text-center">শীঘ্রই আসছে...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workers Tab -->
+        <div id="workers" class="tab-content">
+            <div class="table-container">
+                <div class="table-header">
+                    <h2 class="table-title">
+                        <i class="fas fa-users"></i>
+                        কর্মী ব্যবস্থাপনা
+                    </h2>
+                    <div class="table-controls">
+                        <button class="btn btn-primary" onclick="openWorkerModal()">
+                            <i class="fas fa-plus"></i>
+                            নতুন কর্মী
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>নাম</th>
+                                <th>ফোন</th>
+                                <th>ঠিকানা</th>
+                                <th>কাজের ধরন</th>
+                                <th>মোট কাজ</th>
+                                <th>বেতন (মোট)</th>
+                                <th>অগ্রিম</th>
+                                <th>বাকি</th>
+                                <th>কর্ম</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workerTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-container mt-4">
+                <div class="table-header">
+                    <h2 class="table-title">
+                        <i class="fas fa-exchange-alt"></i>
+                        কর্মী লেনদেন
+                    </h2>
+                    <div class="table-controls">
+                        <button class="btn btn-success" onclick="openWorkerTransactionModal()">
+                            <i class="fas fa-plus"></i>
+                            নতুন লেনদেন
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>তারিখ</th>
+                                <th>কর্মী</th>
+                                <th>বিবরণ</th>
+                                <th>পরিমাণ</th>
+                                <th>ধরন</th>
+                                <th>কর্ম</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workerTransTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Tab -->
+        <div id="inventory" class="tab-content">
+            <div class="table-container">
+                <h2 class="section-title">
+                    <i class="fas fa-boxes"></i>
+                    ইনভেন্টরি ব্যবস্থাপনা
+                </h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>পণ্যের নাম</th>
+                                <th>ক্যাটাগরি</th>
+                                <th>পরিমাণ</th>
+                                <th>ইউনিট</th>
+                                <th>ক্রয় মূল্য</th>
+                                <th>বিক্রয় মূল্য</th>
+                                <th>স্ট্যাটাস</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <tr>
+                                <td colspan="7" class="text-center">শীঘ্রই আসছে...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+            <div class="table-container">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    বিক্রয় রিপোর্ট
+                </h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> শুরু তারিখ</label>
+                        <input type="date" id="reportFromDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> শেষ তারিখ</label>
+                        <input type="date" id="reportToDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary w-100" onclick="generateDateWiseReport()" style="margin-top: 28px;">
+                            <i class="fas fa-chart-bar"></i>
+                            রিপোর্ট তৈরি করুন
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-grid mt-4">
+                    <div class="stat-card sales">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-value" id="reportSale">৳ 0</div>
+                        <div class="stat-label">মোট বিক্রয়</div>
+                    </div>
+                    <div class="stat-card advance">
+                        <div class="stat-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="stat-value" id="reportAdvance">৳ 0</div>
+                        <div class="stat-label">মোট অগ্রিম</div>
+                    </div>
+                    <div class="stat-card due">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value" id="reportDue">৳ 0</div>
+                        <div class="stat-label">বাকি টাকা</div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button class="btn btn-info" onclick="printSalesReport()">
+                        <i class="fas fa-print"></i>
+                        রিপোর্ট প্রিন্ট করুন
+                    </button>
+                    <button class="btn btn-success" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel"></i>
+                        এক্সেল এক্সপোর্ট
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container mt-4">
+                <h2 class="section-title">
+                    <i class="fas fa-user-tie"></i>
+                    কর্মী রিপোর্ট
+                </h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> কর্মী নির্বাচন</label>
+                        <select id="reportWorkerSelect" class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> শুরু তারিখ</label>
+                        <input type="date" id="workerReportFrom" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> শেষ তারিখ</label>
+                        <input type="date" id="workerReportTo" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success w-100" onclick="generateWorkerReport()" style="margin-top: 28px;">
+                            <i class="fas fa-chart-pie"></i>
+                            রিপোর্ট তৈরি করুন
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-grid mt-4">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-value" id="workerReportQty">0</div>
+                        <div class="stat-label">মোট কাজ</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-money-bill"></i>
+                        </div>
+                        <div class="stat-value" id="workerReportTotal">৳ 0</div>
+                        <div class="stat-label">মোট বেতন</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="stat-value" id="workerReportAdvance">৳ 0</div>
+                        <div class="stat-label">অগ্রিম</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value" id="workerReportDue">৳ 0</div>
+                        <div class="stat-label">বাকি</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accounting Tab -->
+        <div id="accounting" class="tab-content">
+            <div class="table-container">
+                <h2 class="section-title">
+                    <i class="fas fa-calculator"></i>
+                    অ্যাকাউন্টিং রিপোর্ট
+                </h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> শুরু তারিখ</label>
+                        <input type="date" id="accountFromDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> শেষ তারিখ</label>
+                        <input type="date" id="accountToDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary w-100" onclick="generateAccountReport()" style="margin-top: 28px;">
+                            <i class="fas fa-chart-line"></i>
+                            রিপোর্ট তৈরি করুন
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-grid mt-4">
+                    <div class="stat-card sales">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-value" id="accountSale">৳ 0</div>
+                        <div class="stat-label">মোট বিক্রয়</div>
+                    </div>
+                    <div class="stat-card due">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-value" id="accountWorker">৳ 0</div>
+                        <div class="stat-label">কর্মী বেতন</div>
+                    </div>
+                    <div class="stat-card balance">
+                        <div class="stat-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="stat-value" id="accountNet">৳ 0</div>
+                        <div class="stat-label">নেট লাভ</div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button class="btn btn-success" onclick="printAccountReport()">
+                        <i class="fas fa-print"></i>
+                        রিপোর্ট প্রিন্ট করুন
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="table-container">
+                <h2 class="section-title">
+                    <i class="fas fa-cog"></i>
+                    সিস্টেম সেটিংস
+                </h2>
+                <div class="form-group">
+                    <label><i class="fas fa-store"></i> দোকানের নাম</label>
+                    <input type="text" id="shopName" class="form-control" value="মেহেদী টেইলার্স & ফেব্রিক্স">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> ঠিকানা</label>
+                    <textarea id="shopAddress" class="form-control" rows="2">ধনাইদ, আশুলিয়া, সাভার, ঢাকা</textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> ফোন নম্বর ১</label>
+                        <input type="text" id="shopPhone1" class="form-control" value="01720267213">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> ফোন নম্বর ২</label>
+                        <input type="text" id="shopPhone2" class="form-control" value="01812249596">
+                    </div>
+                </div>
+                <button class="btn btn-primary w-100" onclick="saveSettings()">
+                    <i class="fas fa-save"></i>
+                    সেটিংস সংরক্ষণ করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Modal -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="orderModalTitle">নতুন অর্ডার যোগ করুন</span>
+                </h2>
+                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="orderForm" onsubmit="saveOrder(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-id-card"></i> অর্ডার আইডি</label>
+                            <input type="text" id="orderId" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> অর্ডার তারিখ</label>
+                            <input type="date" id="orderDate" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-truck"></i> ডেলিভারি তারিখ</label>
+                            <input type="date" id="deliveryDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-flag"></i> স্ট্যাটাস</label>
+                            <select id="status" class="form-control" required>
+                                <option value="Pending">Pending</option>
+                                <option value="Cutting">Cutting</option>
+                                <option value="Sewing">Sewing</option>
+                                <option value="Ready">Ready</option>
+                                <option value="Delivered">Delivered</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> গ্রাহক নাম</label>
+                            <input type="text" id="customerName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> ফোন নম্বর</label>
+                            <input type="text" id="phone" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> ঠিকানা</label>
+                        <input type="text" id="address" class="form-control" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-tshirt"></i> আইটেম নাম</label>
+                            <input type="text" id="itemName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-sort-amount-up"></i> পরিমাণ</label>
+                            <input type="number" id="quantity" class="form-control" min="1" value="1" required oninput="calculateOrderDue()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-ruler-combined"></i> মাপ</label>
+                        <textarea id="measurements" class="form-control" rows="2" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-sticky-note"></i> নোট/বিশেষ নির্দেশনা</label>
+                        <textarea id="notes" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-money-bill-wave"></i> মোট পরিমাণ (৳)</label>
+                            <input type="number" id="totalAmount" class="form-control" required oninput="calculateOrderDue()">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-hand-holding-usd"></i> অগ্রিম (৳)</label>
+                            <input type="number" id="advancePaid" class="form-control" value="0" oninput="calculateOrderDue()">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> বাকি (৳)</label>
+                            <input type="number" id="dueAmount" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save"></i>
+                        অর্ডার সংরক্ষণ করুন
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Worker Modal -->
+    <div class="modal" id="workerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-user-plus"></i>
+                    <span id="workerModalTitle">নতুন কর্মী যোগ করুন</span>
+                </h2>
+                <button class="modal-close" onclick="closeWorkerModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="workerForm" onsubmit="saveWorker(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> কর্মীর নাম</label>
+                            <input type="text" id="workerName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> ফোন নম্বর</label>
+                            <input type="text" id="workerPhone" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> ঠিকানা</label>
+                        <input type="text" id="workerAddress" class="form-control" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-briefcase"></i> কাজের ধরন</label>
+                            <select id="workType" class="form-control" required>
+                                <option value="কাটিং">কাটিং</option>
+                                <option value="সেলাই">সেলাই</option>
+                                <option value="এমব্রয়ডারি">এমব্রয়ডারি</option>
+                                <option value="অন্যান্য">অন্যান্য</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-money-bill-wave"></i> প্রতি কাজের মূল্য (৳)</label>
+                            <input type="number" id="ratePerWork" class="form-control" value="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-sticky-note"></i> নোট</label>
+                        <textarea id="workerNotes" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save"></i>
+                        কর্মী সংরক্ষণ করুন
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Worker Transaction Modal -->
+    <div class="modal" id="workerTransModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-exchange-alt"></i>
+                    কর্মী লেনদেন যোগ করুন
+                </h2>
+                <button class="modal-close" onclick="closeWorkerTransModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="workerTransForm" onsubmit="saveWorkerTransaction(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> তারিখ</label>
+                            <input type="date" id="transDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> কর্মী নির্বাচন</label>
+                            <select id="transWorker" class="form-control" required>
+                                <option value="">নির্বাচন করুন</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-exchange-alt"></i> লেনদেনের ধরন</label>
+                            <select id="transType" class="form-control" required>
+                                <option value="payment">বেতন প্রদান</option>
+                                <option value="advance">অগ্রিম প্রদান</option>
+                                <option value="work_add">কাজ যোগ</option>
+                                <option value="other">অন্যান্য</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-money-bill-wave"></i> পরিমাণ (৳)</label>
+                            <input type="number" id="transAmount" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-tasks"></i> কাজের পরিমাণ (যদি থাকে)</label>
+                            <input type="number" id="workQuantity" class="form-control" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-money-bill"></i> প্রতি কাজের মূল্য (৳)</label>
+                            <input type="number" id="workRate" class="form-control" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-sticky-note"></i> বিবরণ</label>
+                        <textarea id="transDescription" class="form-control" rows="2" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save"></i>
+                        লেনদেন সংরক্ষণ করুন
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-file-invoice"></i>
+                    অর্ডার ইনভয়েস
+                </h2>
+                <button class="modal-close" onclick="closeInvoiceModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="invoiceBody"></div>
+                <button class="btn btn-info w-100 mt-4" onclick="printInvoice()">
+                    <i class="fas fa-print"></i>
+                    প্রিন্ট করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backup Modal -->
+    <div class="modal" id="backupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-database"></i>
+                    ডেটা ব্যাকআপ
+                </h2>
+                <button class="modal-close" onclick="closeBackupModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><i class="fas fa-download"></i> ডেটা ব্যাকআপ ডাউনলোড করুন</label>
+                    <button class="btn btn-success w-100" onclick="downloadBackup()">
+                        <i class="fas fa-download"></i>
+                        ব্যাকআপ ডাউনলোড করুন
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-upload"></i> ডেটা রিস্টোর করুন</label>
+                    <input type="file" id="restoreFile" class="form-control" accept=".json">
+                    <button class="btn btn-warning w-100 mt-2" onclick="restoreBackup()">
+                        <i class="fas fa-upload"></i>
+                        ডেটা রিস্টোর করুন
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-trash"></i> সমস্ত ডেটা মুছে ফেলুন</label>
+                    <button class="btn btn-danger w-100" onclick="showDeleteConfirmation()">
+                        <i class="fas fa-trash"></i>
+                        সব ডেটা মুছুন
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal confirmation-modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    সতর্কতা
+                </h2>
+            </div>
+            <div class="confirmation-body">
+                <div class="confirmation-icon">
+                    <i class="fas fa-trash"></i>
+                </div>
+                <h3>আপনি কি নিশ্চিত?</h3>
+                <p>এই কর্মটি বিপরীতমুখী নয়। সমস্ত ডেটা চিরতরে মুছে ফেলা হবে।</p>
+                <div class="confirmation-buttons">
+                    <button class="btn btn-danger" onclick="deleteAllData()">
+                        <i class="fas fa-check"></i>
+                        হ্যাঁ, মুছে ফেলুন
+                    </button>
+                    <button class="btn btn-light" onclick="closeDeleteModal()">
+                        <i class="fas fa-times"></i>
+                        বাতিল করুন
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Print Area -->
+    <div id="printArea" style="display: none;"></div>
+
+    <script>
+        // ===== Application State =====
+        let appState = {
+            orders: JSON.parse(localStorage.getItem('tailor_orders')) || [],
+            workers: JSON.parse(localStorage.getItem('tailor_workers')) || [],
+            workerTransactions: JSON.parse(localStorage.getItem('tailor_transactions')) || [],
+            settings: JSON.parse(localStorage.getItem('tailor_settings')) || {
+                shopName: "মেহেদী টেইলার্স & ফেব্রিক্স",
+                address: "ধনাইদ, আশুলিয়া, সাভার, ঢাকা",
+                phone: "01720267213, 01812249596",
+                taxRate: 0
+            }
+        };
+
+        // ===== Utility Functions =====
+        function showToast(message, type = 'success') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle'
+            };
+            
+            toast.innerHTML = `
+                <i class="fas ${icons[type]} toast-icon"></i>
+                <div class="toast-content">
+                    <h4>${type === 'success' ? 'সফল' : type === 'error' ? 'ত্রুটি' : 'সতর্কতা'}</h4>
+                    <p>${message}</p>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 5000);
+        }
+
+        function formatCurrency(amount) {
+            return '৳ ' + parseFloat(amount || 0).toLocaleString('bn-BD');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('bn-BD');
+        }
+
+        function generateId(prefix) {
+            const timestamp = Date.now();
+            const random = Math.floor(Math.random() * 1000);
+            return `${prefix}-${timestamp}-${random}`;
+        }
+
+        // ===== Data Management =====
+        function saveData() {
+            localStorage.setItem('tailor_orders', JSON.stringify(appState.orders));
+            localStorage.setItem('tailor_workers', JSON.stringify(appState.workers));
+            localStorage.setItem('tailor_transactions', JSON.stringify(appState.workerTransactions));
+            localStorage.setItem('tailor_settings', JSON.stringify(appState.settings));
+        }
+
+        function loadData() {
+            appState.orders = JSON.parse(localStorage.getItem('tailor_orders')) || [];
+            appState.workers = JSON.parse(localStorage.getItem('tailor_workers')) || [];
+            appState.workerTransactions = JSON.parse(localStorage.getItem('tailor_transactions')) || [];
+            appState.settings = JSON.parse(localStorage.getItem('tailor_settings')) || appState.settings;
+        }
+
+        function backupData() {
+            const data = {
+                orders: appState.orders,
+                workers: appState.workers,
+                workerTransactions: appState.workerTransactions,
+                settings: appState.settings,
+                backupDate: new Date().toISOString()
+            };
+            
+            return JSON.stringify(data, null, 2);
+        }
+
+        function downloadBackup() {
+            const data = backupData();
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `tailor-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('ব্যাকআপ ডাউনলোড সম্পন্ন হয়েছে', 'success');
+        }
+
+        function restoreBackup() {
+            const fileInput = document.getElementById('restoreFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showToast('দয়া করে একটি ফাইল নির্বাচন করুন', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (confirm('আপনি কি নিশ্চিত? বিদ্যমান সব ডেটা মুছে যাবে।')) {
+                        appState.orders = data.orders || [];
+                        appState.workers = data.workers || [];
+                        appState.workerTransactions = data.workerTransactions || [];
+                        appState.settings = data.settings || appState.settings;
+                        
+                        saveData();
+                        initializeApp();
+                        showToast('ডেটা রিস্টোর সফল হয়েছে', 'success');
+                        closeBackupModal();
+                    }
+                } catch (error) {
+                    showToast('ভুল ফাইল ফরম্যাট', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function deleteAllData() {
+            if (confirm('আপনি কি সম্পূর্ণরূপে নিশ্চিত? এই কাজটি বিপরীতমুখী নয়।')) {
+                localStorage.clear();
+                appState = {
+                    orders: [],
+                    workers: [],
+                    workerTransactions: [],
+                    settings: {
+                        shopName: "মেহেদী টেইলার্স & ফেব্রিক্স",
+                        address: "ধনাইদ, আশুলিয়া, সাভার, ঢাকা",
+                        phone: "01720267213, 01812249596",
+                        taxRate: 0
+                    }
+                };
+                initializeApp();
+                closeDeleteModal();
+                showToast('সমস্ত ডেটা মুছে ফেলা হয়েছে', 'success');
+            }
+        }
+
+        // ===== Sidebar Management =====
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggleBtn = document.getElementById('toggleBtn');
+            
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+            
+            // Update toggle button icon
+            const icon = toggleBtn.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.className = 'fas fa-chevron-right';
+            } else {
+                icon.className = 'fas fa-chevron-left';
+            }
+            
+            // Save sidebar state
+            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+        }
+
+        function updateSidebarStats() {
+            // Calculate today's sales
+            const today = new Date().toISOString().split('T')[0];
+            const todaySales = appState.orders.reduce((total, order) => {
+                if (order.orderDate === today) {
+                    return total + (parseFloat(order.totalAmount) || 0);
+                }
+                return total;
+            }, 0);
+            
+            // Calculate pending orders
+            const pendingOrders = appState.orders.filter(order => 
+                order.status !== 'Delivered'
+            ).length;
+            
+            // Calculate total due from workers
+            const workerDue = appState.workers.reduce((total, worker) => {
+                const stats = calculateWorkerStats(worker.id);
+                return total + Math.max(0, stats.dueAmount);
+            }, 0);
+            
+            // Update sidebar stats
+            document.getElementById('sidebarTodaySales').textContent = formatCurrency(todaySales);
+            document.getElementById('sidebarPendingOrders').textContent = pendingOrders;
+            document.getElementById('sidebarDueCollection').textContent = formatCurrency(todaySales * 0.3);
+            
+            // Update badges
+            document.getElementById('pendingOrdersBadge').textContent = pendingOrders;
+            document.getElementById('workerDueBadge').textContent = appState.workers.filter(w => {
+                const stats = calculateWorkerStats(w.id);
+                return stats.dueAmount > 0;
+            }).length;
+        }
+
+        function initializeSidebar() {
+            // Load sidebar state
+            const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggleBtn = document.getElementById('toggleBtn');
+            
+            if (sidebarCollapsed) {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('expanded');
+                const icon = toggleBtn.querySelector('i');
+                icon.className = 'fas fa-chevron-right';
+            }
+            
+            // Setup event listeners
+            document.getElementById('toggleBtn').addEventListener('click', toggleSidebar);
+            
+            document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('active');
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                const sidebar = document.getElementById('sidebar');
+                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                
+                if (window.innerWidth <= 1024 && 
+                    !sidebar.contains(event.target) && 
+                    !mobileMenuBtn.contains(event.target) &&
+                    sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                }
+            });
+            
+            // Setup sidebar search
+            const sidebarSearch = document.getElementById('sidebarSearch');
+            if (sidebarSearch) {
+                sidebarSearch.addEventListener('keyup', function(e) {
+                    if (e.key === 'Enter') {
+                        performGlobalSearch(this.value);
+                    }
+                });
+            }
+        }
+
+        function performGlobalSearch(query) {
+            if (!query.trim()) return;
+            
+            const results = {
+                orders: appState.orders.filter(order => 
+                    order.customerName.toLowerCase().includes(query.toLowerCase()) ||
+                    order.orderId.toLowerCase().includes(query.toLowerCase()) ||
+                    order.phone.includes(query)
+                ),
+                workers: appState.workers.filter(worker =>
+                    worker.name.toLowerCase().includes(query.toLowerCase()) ||
+                    worker.phone.includes(query)
+                )
+            };
+            
+            // Show search results in a modal
+            showSearchResults(results, query);
+        }
+
+        function showSearchResults(results, query) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 800px;">
+                    <div class="modal-header">
+                        <h2 class="modal-title">
+                            <i class="fas fa-search"></i>
+                            সার্চ রেজাল্ট: "${query}"
+                        </h2>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        ${renderSearchResults(results)}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function renderSearchResults(results) {
+            let html = '';
+            
+            if (results.orders.length > 0) {
+                html += `<h3 style="margin-bottom: 15px; color: var(--primary);">অর্ডার (${results.orders.length})</h3>`;
+                results.orders.forEach(order => {
+                    html += `
+                        <div class="search-result-item" onclick="viewOrder('${order.id}')">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border); cursor: pointer;">
+                                <div>
+                                    <strong>${order.orderId}</strong> - ${order.customerName}
+                                    <div style="font-size: 12px; color: var(--gray);">
+                                        ${order.itemName} | ${formatCurrency(order.totalAmount)}
+                                    </div>
+                                </div>
+                                <span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            if (results.workers.length > 0) {
+                html += `<h3 style="margin: 20px 0 15px; color: var(--primary);">কর্মী (${results.workers.length})</h3>`;
+                results.workers.forEach(worker => {
+                    const stats = calculateWorkerStats(worker.id);
+                    html += `
+                        <div class="search-result-item" onclick="viewWorker('${worker.id}')">
+                            <div style="padding: 10px; border-bottom: 1px solid var(--border); cursor: pointer;">
+                                <strong>${worker.name}</strong> - ${worker.workType}
+                                <div style="font-size: 12px; color: var(--gray);">
+                                    ${worker.phone} | বাকি: ${formatCurrency(stats.dueAmount)}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            if (results.orders.length === 0 && results.workers.length === 0) {
+                html = `<div style="text-align: center; padding: 40px; color: var(--gray);">
+                            <i class="fas fa-search" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <h3>কোন ফলাফল পাওয়া যায়নি</h3>
+                            <p>"${query}" এর জন্য কোন তথ্য পাওয়া যায়নি</p>
+                        </div>`;
+            }
+            
+            return html;
+        }
+
+        function viewOrder(orderId) {
+            const order = appState.orders.find(o => o.id === orderId);
+            if (order) {
+                openOrderModal(order);
+                document.querySelectorAll('.modal').forEach(m => m.remove());
+            }
+        }
+
+        function viewWorker(workerId) {
+            const worker = appState.workers.find(w => w.id === workerId);
+            if (worker) {
+                openWorkerModal(worker);
+                document.querySelectorAll('.modal').forEach(m => m.remove());
+            }
+        }
+
+        // Quick action functions
+        function quickAddOrder() {
+            openOrderModal();
+        }
+
+        function quickPayment() {
+            // Show quick payment modal
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 500px;">
+                    <div class="modal-header">
+                        <h2 class="modal-title">
+                            <i class="fas fa-money-bill-wave"></i>
+                            দ্রুত পেমেন্ট
+                        </h2>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form onsubmit="processQuickPayment(event)">
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> নির্বাচন করুন</label>
+                                <select id="quickPaymentType" class="form-control" onchange="updateQuickPaymentOptions()">
+                                    <option value="">ধরন নির্বাচন</option>
+                                    <option value="customer">গ্রাহক</option>
+                                    <option value="worker">কর্মী</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group" id="quickPaymentOptions"></div>
+                            
+                            <div class="form-group">
+                                <label><i class="fas fa-money-bill"></i> পরিমাণ (৳)</label>
+                                <input type="number" id="quickAmount" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><i class="fas fa-sticky-note"></i> বিবরণ</label>
+                                <textarea id="quickPaymentDesc" class="form-control" rows="2"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-check"></i>
+                                পেমেন্ট নিশ্চিত করুন
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function updateQuickPaymentOptions() {
+            const type = document.getElementById('quickPaymentType').value;
+            const container = document.getElementById('quickPaymentOptions');
+            
+            let html = '';
+            if (type === 'customer') {
+                html = `
+                    <label><i class="fas fa-user"></i> গ্রাহক নির্বাচন</label>
+                    <select id="quickCustomer" class="form-control" required>
+                        <option value="">গ্রাহক নির্বাচন করুন</option>
+                        ${appState.orders.map(order => 
+                            `<option value="${order.id}">${order.customerName} (বাকি: ৳${order.dueAmount})</option>`
+                        ).join('')}
+                    </select>
+                `;
+            } else if (type === 'worker') {
+                html = `
+                    <label><i class="fas fa-user-tie"></i> কর্মী নির্বাচন</label>
+                    <select id="quickWorker" class="form-control" required>
+                        <option value="">কর্মী নির্বাচন করুন</option>
+                        ${appState.workers.map(worker => {
+                            const stats = calculateWorkerStats(worker.id);
+                            return `<option value="${worker.id}">${worker.name} (বাকি: ৳${stats.dueAmount})</option>`;
+                        }).join('')}
+                    </select>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function processQuickPayment(event) {
+            event.preventDefault();
+            // Implementation for quick payment processing
+            showToast('পেমেন্ট সফলভাবে সংরক্ষণ করা হয়েছে', 'success');
+            event.target.closest('.modal').remove();
+        }
+
+        function showNotifications() {
+            // Show notifications modal
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+            
+            const pendingOrders = appState.orders.filter(order => order.status !== 'Delivered');
+            const todayDelivery = appState.orders.filter(order => order.deliveryDate === today);
+            const tomorrowDelivery = appState.orders.filter(order => order.deliveryDate === tomorrow);
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h2 class="modal-title">
+                            <i class="fas fa-bell"></i>
+                            নোটিফিকেশন
+                        </h2>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="notification-category">
+                            <h4 style="color: var(--primary); margin-bottom: 15px;">
+                                <i class="fas fa-clock"></i> আজকের ডেলিভারি (${todayDelivery.length})
+                            </h4>
+                            ${todayDelivery.map(order => `
+                                <div class="notification-item" onclick="viewOrder('${order.id}')">
+                                    <strong>${order.customerName}</strong> - ${order.itemName}
+                                    <div style="font-size: 12px; color: var(--gray);">
+                                        ${order.orderId} | ${formatCurrency(order.totalAmount)}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="notification-category">
+                            <h4 style="color: var(--warning); margin: 20px 0 15px;">
+                                <i class="fas fa-calendar-day"></i> আগামীকালের ডেলিভারি (${tomorrowDelivery.length})
+                            </h4>
+                            ${tomorrowDelivery.map(order => `
+                                <div class="notification-item" onclick="viewOrder('${order.id}')">
+                                    <strong>${order.customerName}</strong> - ${order.itemName}
+                                    <div style="font-size: 12px; color: var(--gray);">
+                                        ${order.orderId} | ${formatCurrency(order.totalAmount)}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="notification-category">
+                            <h4 style="color: var(--danger); margin: 20px 0 15px;">
+                                <i class="fas fa-exclamation-triangle"></i> বাকি অর্ডার (${pendingOrders.length})
+                            </h4>
+                            ${pendingOrders.slice(0, 5).map(order => `
+                                <div class="notification-item" onclick="viewOrder('${order.id}')">
+                                    <strong>${order.customerName}</strong> - ${order.itemName}
+                                    <div style="font-size: 12px; color: var(--gray);">
+                                        স্ট্যাটাস: ${order.status} | বাকি: ${formatCurrency(order.dueAmount)}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function logout() {
+            if (confirm('আপনি কি লগআউট করতে চান?')) {
+                // Clear sensitive data
+                localStorage.removeItem('tailor_auth');
+                showToast('সফলভাবে লগআউট করা হয়েছে', 'success');
+                // Reload the page
+                setTimeout(() => location.reload(), 1000);
+            }
+        }
+
+        // ===== UI Management =====
+        function switchTab(tabName) {
+            // Update active tab in sidebar
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            
+            // Show selected tab content
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            
+            // Close mobile menu
+            document.getElementById('sidebar').classList.remove('active');
+            
+            // Load data for tab
+            switch(tabName) {
+                case 'dashboard':
+                    updateDashboard();
+                    loadRecentOrders();
+                    break;
+                case 'orders':
+                    renderOrders();
+                    break;
+                case 'workers':
+                    renderWorkers();
+                    renderWorkerTransactions();
+                    break;
+                case 'reports':
+                    initializeReports();
+                    break;
+                case 'accounting':
+                    initializeAccounting();
+                    break;
+                case 'settings':
+                    loadSettings();
+                    break;
+            }
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            };
+            const formatter = new Intl.DateTimeFormat('bn-BD', options);
+            document.getElementById('currentDateTime').textContent = formatter.format(now);
+        }
+
+        // ===== Slider Functions =====
+        let currentSlide = 0;
+        const slides = [
+            {
+                title: "আজকের বিশেষ অফার",
+                content: "সমস্ত সেলাই কাজে ১০% ছাড় চলছে! শুধুমাত্র আজ"
+            },
+            {
+                title: "নতুন গ্রাহকদের জন্য",
+                content: "প্রথম অর্ডারে ১৫% ছাড় এবং বিনামূল্যে ডেলিভারি"
+            },
+            {
+                title: "কর্মীদের জন্য নিয়ম",
+                content: "সময়মতো কাজ শেষ করলে অতিরিক্ত বোনাস দেওয়া হবে"
+            },
+            {
+                title: "নতুন সার্ভিস",
+                content: "এখন থেকে হোম ডেলিভারি সার্ভিসও পাওয়া যাবে"
+            }
+        ];
+
+        function initializeSlider() {
+            const slider = document.getElementById('slider');
+            const dotsContainer = document.getElementById('sliderDots');
+            
+            slider.innerHTML = '';
+            dotsContainer.innerHTML = '';
+            
+            slides.forEach((slide, index) => {
+                // Create slide
+                const slideElement = document.createElement('div');
+                slideElement.className = 'slide';
+                slideElement.innerHTML = `
+                    <h3 class="slide-title">${slide.title}</h3>
+                    <p class="slide-content">${slide.content}</p>
+                `;
+                slider.appendChild(slideElement);
+                
+                // Create dot
+                const dot = document.createElement('div');
+                dot.className = `slider-dot ${index === 0 ? 'active' : ''}`;
+                dot.onclick = () => goToSlide(index);
+                dotsContainer.appendChild(dot);
+            });
+            
+            updateSlider();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlider();
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlider();
+        }
+
+        function updateSlider() {
+            const slider = document.getElementById('slider');
+            const dots = document.querySelectorAll('.slider-dot');
+            
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        // Auto slide every 5 seconds
+        setInterval(nextSlide, 5000);
+
+        // ===== Dashboard Functions =====
+        function updateDashboard() {
+            // Calculate totals
+            const totals = appState.orders.reduce((acc, order) => {
+                acc.sale += parseFloat(order.totalAmount) || 0;
+                acc.advance += parseFloat(order.advancePaid) || 0;
+                acc.due += parseFloat(order.dueAmount) || 0;
+                return acc;
+            }, { sale: 0, advance: 0, due: 0 });
+            
+            // Calculate worker payments
+            const workerPayments = appState.workerTransactions.reduce((acc, trans) => {
+                if (trans.type === 'payment' || trans.type === 'advance') {
+                    acc += parseFloat(trans.amount) || 0;
+                }
+                return acc;
+            }, 0);
+            
+            const netBalance = totals.sale - workerPayments;
+            
+            // Update UI
+            document.getElementById('totalSale').textContent = formatCurrency(totals.sale);
+            document.getElementById('totalAdvance').textContent = formatCurrency(totals.advance);
+            document.getElementById('totalDue').textContent = formatCurrency(totals.due);
+            document.getElementById('netBalance').textContent = formatCurrency(netBalance);
+            
+            // Update sidebar stats
+            updateSidebarStats();
+        }
+
+        function loadRecentOrders() {
+            const tbody = document.getElementById('recentOrders');
+            tbody.innerHTML = '';
+            
+            // Get recent 5 orders
+            const recentOrders = [...appState.orders]
+                .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate))
+                .slice(0, 5);
+            
+            if (recentOrders.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center">কোন অর্ডার পাওয়া যায়নি</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            recentOrders.forEach(order => {
+                const statusClass = `status-${order.status.toLowerCase()}`;
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${order.orderId}</td>
+                        <td>${order.customerName}</td>
+                        <td>${order.itemName}</td>
+                        <td>${formatCurrency(order.totalAmount)}</td>
+                        <td><span class="status-badge ${statusClass}">${order.status}</span></td>
+                        <td>${formatDate(order.deliveryDate)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // ===== Order Management =====
+        function openOrderModal(order = null) {
+            const modal = document.getElementById('orderModal');
+            const title = document.getElementById('orderModalTitle');
+            const form = document.getElementById('orderForm');
+            
+            if (order) {
+                title.textContent = 'অর্ডার সম্পাদনা';
+                form.dataset.editId = order.id;
+                
+                // Fill form data
+                document.getElementById('orderId').value = order.orderId;
+                document.getElementById('orderDate').value = order.orderDate;
+                document.getElementById('deliveryDate').value = order.deliveryDate;
+                document.getElementById('customerName').value = order.customerName;
+                document.getElementById('phone').value = order.phone;
+                document.getElementById('address').value = order.address;
+                document.getElementById('itemName').value = order.itemName;
+                document.getElementById('quantity').value = order.quantity;
+                document.getElementById('measurements').value = order.measurements;
+                document.getElementById('notes').value = order.notes || '';
+                document.getElementById('totalAmount').value = order.totalAmount;
+                document.getElementById('advancePaid').value = order.advancePaid;
+                document.getElementById('dueAmount').value = order.dueAmount;
+                document.getElementById('status').value = order.status;
+            } else {
+                title.textContent = 'নতুন অর্ডার যোগ করুন';
+                form.reset();
+                delete form.dataset.editId;
+                
+                // Set default values
+                const today = new Date().toISOString().split('T')[0];
+                const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+                
+                document.getElementById('orderDate').value = today;
+                document.getElementById('deliveryDate').value = tomorrow;
+                document.getElementById('orderId').value = generateId('ORD');
+                
+                calculateOrderDue();
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.remove('active');
+        }
+
+        function calculateOrderDue() {
+            const total = parseFloat(document.getElementById('totalAmount').value) || 0;
+            const advance = parseFloat(document.getElementById('advancePaid').value) || 0;
+            const due = Math.max(0, total - advance);
+            document.getElementById('dueAmount').value = due;
+        }
+
+        function saveOrder(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('orderForm');
+            const editId = form.dataset.editId;
+            
+            const order = {
+                id: editId || generateId('ORD'),
+                orderId: document.getElementById('orderId').value,
+                orderDate: document.getElementById('orderDate').value,
+                deliveryDate: document.getElementById('deliveryDate').value,
+                customerName: document.getElementById('customerName').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                itemName: document.getElementById('itemName').value,
+                quantity: document.getElementById('quantity').value,
+                measurements: document.getElementById('measurements').value,
+                notes: document.getElementById('notes').value,
+                totalAmount: document.getElementById('totalAmount').value,
+                advancePaid: document.getElementById('advancePaid').value,
+                dueAmount: document.getElementById('dueAmount').value,
+                status: document.getElementById('status').value,
+                createdAt: editId ? 
+                    (appState.orders.find(o => o.id === editId)?.createdAt || new Date().toISOString()) : 
+                    new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            if (editId) {
+                // Update existing order
+                const index = appState.orders.findIndex(o => o.id === editId);
+                if (index !== -1) {
+                    appState.orders[index] = order;
+                }
+            } else {
+                // Add new order
+                appState.orders.push(order);
+            }
+            
+            saveData();
+            updateDashboard();
+            renderOrders();
+            loadRecentOrders();
+            
+            closeOrderModal();
+            showToast('অর্ডার সফলভাবে সংরক্ষণ করা হয়েছে', 'success');
+        }
+
+        function deleteOrder(orderId) {
+            if (confirm('আপনি কি এই অর্ডারটি মুছে ফেলতে চান?')) {
+                const order = appState.orders.find(o => o.id === orderId);
+                if (order && parseFloat(order.advancePaid) > 0) {
+                    if (!confirm('এই অর্ডারে অগ্রিম টাকা আছে। আপনি কি তবুও মুছতে চান?')) {
+                        return;
+                    }
+                }
+                
+                appState.orders = appState.orders.filter(order => order.id !== orderId);
+                saveData();
+                
+                updateDashboard();
+                renderOrders();
+                loadRecentOrders();
+                
+                showToast('অর্ডার সফলভাবে মুছে ফেলা হয়েছে', 'success');
+            }
+        }
+
+        function renderOrders() {
+            const tbody = document.getElementById('orderTableBody');
+            const searchTerm = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+            const statusFilter = document.getElementById('statusFilter')?.value || '';
+            
+            tbody.innerHTML = '';
+            
+            const filteredOrders = appState.orders.filter(order => {
+                const matchesSearch = !searchTerm || 
+                    order.customerName.toLowerCase().includes(searchTerm) ||
+                    order.phone.includes(searchTerm) ||
+                    order.orderId.toLowerCase().includes(searchTerm);
+                
+                const matchesStatus = !statusFilter || order.status === statusFilter;
+                
+                return matchesSearch && matchesStatus;
+            });
+            
+            if (filteredOrders.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="10" class="text-center">কোন অর্ডার পাওয়া যায়নি</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            filteredOrders.forEach(order => {
+                const statusClass = `status-${order.status.toLowerCase()}`;
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${order.orderId}</td>
+                        <td>${order.customerName}</td>
+                        <td>${order.phone}</td>
+                        <td>${order.itemName}</td>
+                        <td>${formatCurrency(order.totalAmount)}</td>
+                        <td>${formatCurrency(order.advancePaid)}</td>
+                        <td class="${parseFloat(order.dueAmount) > 0 ? 'text-danger' : 'text-success'}">
+                            ${formatCurrency(order.dueAmount)}
+                        </td>
+                        <td>${formatDate(order.deliveryDate)}</td>
+                        <td><span class="status-badge ${statusClass}">${order.status}</span></td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-success btn-sm" onclick="editOrder('${order.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteOrder('${order.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="btn btn-info btn-sm" onclick="generateInvoiceForOrder('${order.id}')">
+                                    <i class="fas fa-file-invoice"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function editOrder(orderId) {
+            const order = appState.orders.find(o => o.id === orderId);
+            if (order) {
+                openOrderModal(order);
+            }
+        }
+
+        // ===== Worker Management =====
+        function openWorkerModal(worker = null) {
+            const modal = document.getElementById('workerModal');
+            const title = document.getElementById('workerModalTitle');
+            const form = document.getElementById('workerForm');
+            
+            if (worker) {
+                title.textContent = 'কর্মী সম্পাদনা';
+                form.dataset.editId = worker.id;
+                
+                // Fill form data
+                document.getElementById('workerName').value = worker.name;
+                document.getElementById('workerPhone').value = worker.phone;
+                document.getElementById('workerAddress').value = worker.address;
+                document.getElementById('workType').value = worker.workType;
+                document.getElementById('ratePerWork').value = worker.ratePerWork;
+                document.getElementById('workerNotes').value = worker.notes || '';
+            } else {
+                title.textContent = 'নতুন কর্মী যোগ করুন';
+                form.reset();
+                delete form.dataset.editId;
+                
+                // Generate worker ID
+                form.dataset.newId = generateId('WRK');
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeWorkerModal() {
+            document.getElementById('workerModal').classList.remove('active');
+        }
+
+        function calculateWorkerStats(workerId) {
+            const worker = appState.workers.find(w => w.id === workerId);
+            if (!worker) return { totalWork: 0, totalSalary: 0, advancePaid: 0, dueAmount: 0 };
+            
+            const transactions = appState.workerTransactions.filter(t => t.workerId === workerId);
+            
+            let totalWork = 0;
+            let totalSalary = 0;
+            let advancePaid = 0;
+            
+            transactions.forEach(trans => {
+                if (trans.type === 'work_add') {
+                    const quantity = parseInt(trans.workQuantity) || 0;
+                    const rate = parseFloat(trans.workRate) || parseFloat(worker.ratePerWork) || 0;
+                    totalWork += quantity;
+                    totalSalary += quantity * rate;
+                } else if (trans.type === 'advance' || trans.type === 'payment') {
+                    advancePaid += parseFloat(trans.amount) || 0;
+                }
+            });
+            
+            const dueAmount = totalSalary - advancePaid;
+            
+            return { totalWork, totalSalary, advancePaid, dueAmount };
+        }
+
+        function saveWorker(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('workerForm');
+            const editId = form.dataset.editId;
+            const newId = form.dataset.newId;
+            
+            const worker = {
+                id: editId || newId,
+                name: document.getElementById('workerName').value,
+                phone: document.getElementById('workerPhone').value,
+                address: document.getElementById('workerAddress').value,
+                workType: document.getElementById('workType').value,
+                ratePerWork: document.getElementById('ratePerWork').value,
+                notes: document.getElementById('workerNotes').value,
+                createdAt: editId ? 
+                    (appState.workers.find(w => w.id === editId)?.createdAt || new Date().toISOString()) : 
+                    new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            if (editId) {
+                // Update existing worker
+                const index = appState.workers.findIndex(w => w.id === editId);
+                if (index !== -1) {
+                    appState.workers[index] = worker;
+                }
+            } else {
+                // Add new worker
+                appState.workers.push(worker);
+            }
+            
+            saveData();
+            renderWorkers();
+            loadWorkersForSelect();
+            
+            closeWorkerModal();
+            showToast('কর্মী সফলভাবে সংরক্ষণ করা হয়েছে', 'success');
+        }
+
+        function deleteWorker(workerId) {
+            if (confirm('আপনি কি এই কর্মীটি মুছে ফেলতে চান? এর সাথে সম্পর্কিত সব লেনদেনও মুছে যাবে।')) {
+                // Check if worker has any transactions
+                const hasTransactions = appState.workerTransactions.some(t => t.workerId === workerId);
+                if (hasTransactions) {
+                    if (!confirm('এই কর্মীর লেনদেন আছে। সব লেনদেন মুছে ফেলা হবে। আপনি কি নিশ্চিত?')) {
+                        return;
+                    }
+                }
+                
+                // Remove worker and related transactions
+                appState.workers = appState.workers.filter(worker => worker.id !== workerId);
+                appState.workerTransactions = appState.workerTransactions.filter(trans => trans.workerId !== workerId);
+                
+                saveData();
+                renderWorkers();
+                renderWorkerTransactions();
+                loadWorkersForSelect();
+                
+                showToast('কর্মী সফলভাবে মুছে ফেলা হয়েছে', 'success');
+            }
+        }
+
+        function renderWorkers() {
+            const tbody = document.getElementById('workerTableBody');
+            tbody.innerHTML = '';
+            
+            if (appState.workers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="text-center">কোন কর্মী পাওয়া যায়নি</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            appState.workers.forEach(worker => {
+                const stats = calculateWorkerStats(worker.id);
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${worker.name}</td>
+                        <td>${worker.phone}</td>
+                        <td>${worker.address}</td>
+                        <td>${worker.workType}</td>
+                        <td>${stats.totalWork}</td>
+                        <td>${formatCurrency(stats.totalSalary)}</td>
+                        <td>${formatCurrency(stats.advancePaid)}</td>
+                        <td class="${stats.dueAmount > 0 ? 'text-danger' : 'text-success'}">
+                            ${formatCurrency(stats.dueAmount)}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-success btn-sm" onclick="editWorker('${worker.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteWorker('${worker.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function editWorker(workerId) {
+            const worker = appState.workers.find(w => w.id === workerId);
+            if (worker) {
+                openWorkerModal(worker);
+            }
+        }
+
+        function loadWorkersForSelect() {
+            const selects = [
+                document.getElementById('transWorker'),
+                document.getElementById('reportWorkerSelect')
+            ];
+            
+            selects.forEach(select => {
+                if (select) {
+                    let options = '<option value="">নির্বাচন করুন</option>';
+                    appState.workers.forEach(worker => {
+                        options += `<option value="${worker.id}">${worker.name} (${worker.workType})</option>`;
+                    });
+                    select.innerHTML = options;
+                }
+            });
+        }
+
+        // ===== Worker Transaction Management =====
+        function openWorkerTransactionModal() {
+            const modal = document.getElementById('workerTransModal');
+            modal.classList.add('active');
+            
+            // Set today's date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('transDate').value = today;
+            
+            // Load workers in select
+            loadWorkersForSelect();
+        }
+
+        function closeWorkerTransModal() {
+            document.getElementById('workerTransModal').classList.remove('active');
+        }
+
+        function saveWorkerTransaction(event) {
+            event.preventDefault();
+            
+            const workerId = document.getElementById('transWorker').value;
+            const worker = appState.workers.find(w => w.id === workerId);
+            
+            if (!worker) {
+                showToast('দয়া করে একজন কর্মী নির্বাচন করুন', 'error');
+                return;
+            }
+            
+            const transaction = {
+                id: generateId('TRN'),
+                date: document.getElementById('transDate').value,
+                workerId: workerId,
+                workerName: worker.name,
+                type: document.getElementById('transType').value,
+                amount: document.getElementById('transAmount').value,
+                workQuantity: document.getElementById('workQuantity').value,
+                workRate: document.getElementById('workRate').value,
+                description: document.getElementById('transDescription').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            appState.workerTransactions.push(transaction);
+            saveData();
+            
+            // Update worker stats automatically
+            renderWorkers();
+            renderWorkerTransactions();
+            
+            closeWorkerTransModal();
+            showToast('লেনদেন সফলভাবে সংরক্ষণ করা হয়েছে', 'success');
+        }
+
+        function deleteWorkerTransaction(transId) {
+            if (confirm('আপনি কি এই লেনদেনটি মুছে ফেলতে চান?')) {
+                const transIndex = appState.workerTransactions.findIndex(t => t.id === transId);
+                if (transIndex !== -1) {
+                    const workerId = appState.workerTransactions[transIndex].workerId;
+                    
+                    // Remove transaction
+                    appState.workerTransactions.splice(transIndex, 1);
+                    saveData();
+                    
+                    // Update worker stats
+                    renderWorkers();
+                    renderWorkerTransactions();
+                    
+                    showToast('লেনদেন সফলভাবে মুছে ফেলা হয়েছে', 'success');
+                }
+            }
+        }
+
+        function renderWorkerTransactions() {
+            const tbody = document.getElementById('workerTransTableBody');
+            tbody.innerHTML = '';
+            
+            if (appState.workerTransactions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center">কোন লেনদেন পাওয়া যায়নি</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Sort by date (newest first)
+            const sortedTransactions = [...appState.workerTransactions]
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            sortedTransactions.forEach(trans => {
+                let typeText = '';
+                let typeClass = '';
+                
+                switch(trans.type) {
+                    case 'payment':
+                        typeText = 'বেতন প্রদান';
+                        typeClass = 'text-success';
+                        break;
+                    case 'advance':
+                        typeText = 'অগ্রিম প্রদান';
+                        typeClass = 'text-warning';
+                        break;
+                    case 'work_add':
+                        typeText = 'কাজ যোগ';
+                        typeClass = 'text-info';
+                        break;
+                    default:
+                        typeText = 'অন্যান্য';
+                        typeClass = '';
+                }
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${formatDate(trans.date)}</td>
+                        <td>${trans.workerName}</td>
+                        <td>${trans.description}</td>
+                        <td>${formatCurrency(trans.amount)}</td>
+                        <td class="${typeClass}">${typeText}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteWorkerTransaction('${trans.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // ===== Report Functions =====
+        function initializeReports() {
+            const today = new Date().toISOString().split('T')[0];
+            const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+            
+            document.getElementById('reportFromDate').value = firstDayOfMonth;
+            document.getElementById('reportToDate').value = today;
+            document.getElementById('workerReportFrom').value = firstDayOfMonth;
+            document.getElementById('workerReportTo').value = today;
+            
+            generateDateWiseReport();
+        }
+
+        function generateDateWiseReport() {
+            const fromDate = document.getElementById('reportFromDate').value;
+            const toDate = document.getElementById('reportToDate').value;
+            
+            let totalSale = 0, totalAdvance = 0, totalDue = 0;
+            
+            appState.orders.forEach(order => {
+                if ((!fromDate || order.orderDate >= fromDate) && (!toDate || order.orderDate <= toDate)) {
+                    totalSale += parseFloat(order.totalAmount) || 0;
+                    totalAdvance += parseFloat(order.advancePaid) || 0;
+                    totalDue += parseFloat(order.dueAmount) || 0;
+                }
+            });
+            
+            document.getElementById('reportSale').textContent = formatCurrency(totalSale);
+            document.getElementById('reportAdvance').textContent = formatCurrency(totalAdvance);
+            document.getElementById('reportDue').textContent = formatCurrency(totalDue);
+        }
+
+        function generateWorkerReport() {
+            const workerId = document.getElementById('reportWorkerSelect').value;
+            const fromDate = document.getElementById('workerReportFrom').value;
+            const toDate = document.getElementById('workerReportTo').value;
+            
+            if (!workerId) {
+                showToast('দয়া করে একজন কর্মী নির্বাচন করুন', 'error');
+                return;
+            }
+            
+            const worker = appState.workers.find(w => w.id === workerId);
+            if (!worker) return;
+            
+            // Filter transactions by date
+            const filteredTransactions = appState.workerTransactions.filter(t => 
+                t.workerId === workerId &&
+                (!fromDate || t.date >= fromDate) &&
+                (!toDate || t.date <= toDate)
+            );
+            
+            let totalWork = 0;
+            let totalSalary = 0;
+            let advancePaid = 0;
+            
+            filteredTransactions.forEach(trans => {
+                if (trans.type === 'work_add') {
+                    const quantity = parseInt(trans.workQuantity) || 0;
+                    const rate = parseFloat(trans.workRate) || parseFloat(worker.ratePerWork) || 0;
+                    totalWork += quantity;
+                    totalSalary += quantity * rate;
+                } else if (trans.type === 'advance' || trans.type === 'payment') {
+                    advancePaid += parseFloat(trans.amount) || 0;
+                }
+            });
+            
+            const dueAmount = totalSalary - advancePaid;
+            
+            document.getElementById('workerReportQty').textContent = totalWork;
+            document.getElementById('workerReportTotal').textContent = formatCurrency(totalSalary);
+            document.getElementById('workerReportAdvance').textContent = formatCurrency(advancePaid);
+            document.getElementById('workerReportDue').textContent = formatCurrency(dueAmount);
+        }
+
+        function printSalesReport() {
+            const fromDate = document.getElementById('reportFromDate').value || 'সব তারিখ';
+            const toDate = document.getElementById('reportToDate').value || 'সব তারিখ';
+            
+            const html = `
+                <div class="print-content" style="padding: 20px; font-family: Arial, sans-serif;">
+                    <h1 style="text-align: center; margin-bottom: 10px;">${appState.settings.shopName}</h1>
+                    <p style="text-align: center; margin-bottom: 30px;">${appState.settings.address}<br>${appState.settings.phone}</p>
+                    
+                    <h2 style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px;">
+                        বিক্রয় রিপোর্ট
+                    </h2>
+                    
+                    <p style="margin-bottom: 20px;">
+                        <strong>রিপোর্ট সময়কাল:</strong> ${fromDate} থেকে ${toDate}
+                    </p>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;" border="1">
+                        <tr>
+                            <th style="padding: 10px; background: #f0f0f0;">বিবরণ</th>
+                            <th style="padding: 10px; background: #f0f0f0;">পরিমাণ</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">মোট বিক্রয়</td>
+                            <td style="padding: 10px; text-align: right;">${document.getElementById('reportSale').textContent}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">মোট অগ্রিম</td>
+                            <td style="padding: 10px; text-align: right;">${document.getElementById('reportAdvance').textContent}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">বাকি টাকা</td>
+                            <td style="padding: 10px; text-align: right;">${document.getElementById('reportDue').textContent}</td>
+                        </tr>
+                    </table>
+                    
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #000;">
+                        <p style="float: left;">প্রস্তুতকারকের স্বাক্ষর</p>
+                        <p style="float: right;">তারিখ: ${new Date().toLocaleDateString('bn-BD')}</p>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+            `;
+            
+            printContent(html);
+        }
+
+        // ===== Accounting Functions =====
+        function initializeAccounting() {
+            const today = new Date().toISOString().split('T')[0];
+            const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+            
+            document.getElementById('accountFromDate').value = firstDayOfMonth;
+            document.getElementById('accountToDate').value = today;
+            
+            generateAccountReport();
+        }
+
+        function generateAccountReport() {
+            const fromDate = document.getElementById('accountFromDate').value;
+            const toDate = document.getElementById('accountToDate').value;
+            
+            let totalSale = 0;
+            let totalWorkerPayment = 0;
+            
+            // Calculate sales
+            appState.orders.forEach(order => {
+                if ((!fromDate || order.orderDate >= fromDate) && (!toDate || order.orderDate <= toDate)) {
+                    totalSale += parseFloat(order.totalAmount) || 0;
+                }
+            });
+            
+            // Calculate worker payments
+            appState.workerTransactions.forEach(trans => {
+                if ((trans.type === 'payment' || trans.type === 'advance') &&
+                    (!fromDate || trans.date >= fromDate) &&
+                    (!toDate || trans.date <= toDate)) {
+                    totalWorkerPayment += parseFloat(trans.amount) || 0;
+                }
+            });
+            
+            const netBalance = totalSale - totalWorkerPayment;
+            
+            document.getElementById('accountSale').textContent = formatCurrency(totalSale);
+            document.getElementById('accountWorker').textContent = formatCurrency(totalWorkerPayment);
+            document.getElementById('accountNet').textContent = formatCurrency(netBalance);
+        }
+
+        function printAccountReport() {
+            const fromDate = document.getElementById('accountFromDate').value || 'সব তারিখ';
+            const toDate = document.getElementById('accountToDate').value || 'সব তারিখ';
+            
+            const html = `
+                <div class="print-content" style="padding: 20px; font-family: Arial, sans-serif;">
+                    <h1 style="text-align: center; margin-bottom: 10px;">${appState.settings.shopName}</h1>
+                    <p style="text-align: center; margin-bottom: 30px;">${appState.settings.address}<br>${appState.settings.phone}</p>
+                    
+                    <h2 style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px;">
+                        অ্যাকাউন্টিং রিপোর্ট
+                    </h2>
+                    
+                    <p style="margin-bottom: 20px;">
+                        <strong>রিপোর্ট সময়কাল:</strong> ${fromDate} থেকে ${toDate}
+                    </p>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;" border="1">
+                        <tr>
+                            <th style="padding: 10px; background: #f0f0f0;">বিবরণ</th>
+                            <th style="padding: 10px; background: #f0f0f0;">পরিমাণ</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">মোট বিক্রয়</td>
+                            <td style="padding: 10px; text-align: right;">${document.getElementById('accountSale').textContent}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">কর্মী বেতন/অগ্রিম</td>
+                            <td style="padding: 10px; text-align: right;">${document.getElementById('accountWorker').textContent}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; font-weight: bold;">নেট লাভ/লস</td>
+                            <td style="padding: 10px; text-align: right; font-weight: bold;">${document.getElementById('accountNet').textContent}</td>
+                        </tr>
+                    </table>
+                    
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #000;">
+                        <p style="float: left;">প্রস্তুতকারকের স্বাক্ষর</p>
+                        <p style="float: right;">তারিখ: ${new Date().toLocaleDateString('bn-BD')}</p>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+            `;
+            
+            printContent(html);
+        }
+
+        function generateDailyReport() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reportFromDate').value = today;
+            document.getElementById('reportToDate').value = today;
+            generateDateWiseReport();
+            switchTab('reports');
+        }
+
+        // ===== Invoice System =====
+        function generateInvoiceForOrder(orderId) {
+            const order = appState.orders.find(o => o.id === orderId);
+            if (!order) {
+                showToast('অর্ডার পাওয়া যায়নি!', 'error');
+                return;
+            }
+
+            const html = `
+                <div style="width: 100%; max-width: 800px; margin: 0 auto; padding: 20px; border: 2px solid #000; font-family: Arial, sans-serif;">
+                    <!-- Header -->
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h1 style="margin: 0; color: #2c3e50;">${appState.settings.shopName}</h1>
+                        <p style="margin: 5px 0; color: #666;">${appState.settings.address}</p>
+                        <p style="margin: 5px 0; color: #666;">ফোন: ${appState.settings.phone}</p>
+                    </div>
+                    
+                    <!-- Title -->
+                    <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px dashed #000; padding-bottom: 10px;">
+                        <h2 style="margin: 0; color: #2c3e50;">অর্ডার ইনভয়েস</h2>
+                    </div>
+                    
+                    <!-- Order Details -->
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <div>
+                                <p><strong>অর্ডার আইডি:</strong> ${order.orderId}</p>
+                                <p><strong>অর্ডার তারিখ:</strong> ${formatDate(order.orderDate)}</p>
+                                <p><strong>ডেলিভারি তারিখ:</strong> ${formatDate(order.deliveryDate)}</p>
+                            </div>
+                            <div>
+                                <p><strong>স্ট্যাটাস:</strong> ${order.status}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Customer Details -->
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                        <h3 style="margin-top: 0; color: #2c3e50;">গ্রাহক তথ্য</h3>
+                        <p><strong>নাম:</strong> ${order.customerName}</p>
+                        <p><strong>ফোন:</strong> ${order.phone}</p>
+                        <p><strong>ঠিকানা:</strong> ${order.address}</p>
+                    </div>
+                    
+                    <!-- Order Items -->
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;" border="1">
+                        <thead>
+                            <tr style="background: #2c3e50; color: white;">
+                                <th style="padding: 10px; text-align: left;">আইটেম</th>
+                                <th style="padding: 10px; text-align: center;">পরিমাণ</th>
+                                <th style="padding: 10px; text-align: left;">মাপ</th>
+                                <th style="padding: 10px; text-align: right;">মূল্য</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px;">${order.itemName}</td>
+                                <td style="padding: 10px; text-align: center;">${order.quantity}</td>
+                                <td style="padding: 10px;">${order.measurements}</td>
+                                <td style="padding: 10px; text-align: right;">${formatCurrency(order.totalAmount)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- Notes -->
+                    ${order.notes ? `
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 5px; color: #2c3e50;">বিশেষ নির্দেশনা:</h4>
+                        <p style="background: #f8f9fa; padding: 10px; border-radius: 5px;">${order.notes}</p>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Payment Summary -->
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                        <h3 style="margin-top: 0; color: #2c3e50;">পেমেন্ট সারাংশ</h3>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="padding: 5px 0;"><strong>মোট টাকা:</strong></td>
+                                <td style="padding: 5px 0; text-align: right;">${formatCurrency(order.totalAmount)}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0;"><strong>অগ্রিম:</strong></td>
+                                <td style="padding: 5px 0; text-align: right;">${formatCurrency(order.advancePaid)}</td>
+                            </tr>
+                            <tr style="border-top: 2px solid #ddd;">
+                                <td style="padding: 5px 0; font-weight: bold;"><strong>বাকি টাকা:</strong></td>
+                                <td style="padding: 5px 0; text-align: right; font-weight: bold; color: ${parseFloat(order.dueAmount) > 0 ? '#e74c3c' : '#27ae60'};">${formatCurrency(order.dueAmount)}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px dashed #000;">
+                        <p style="margin: 5px 0; color: #666;">ধন্যবাদান্তে,</p>
+                        <p style="margin: 5px 0; font-weight: bold;">${appState.settings.shopName}</p>
+                        <p style="margin: 5px 0; color: #666;">প্রস্তুতের তারিখ: ${new Date().toLocaleDateString('bn-BD')}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('invoiceBody').innerHTML = html;
+            document.getElementById('invoiceModal').classList.add('active');
+        }
+
+        function closeInvoiceModal() {
+            document.getElementById('invoiceModal').classList.remove('active');
+        }
+
+        function printInvoice() {
+            const invoiceContent = document.getElementById('invoiceBody').innerHTML;
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>ইনভয়েস - ${appState.settings.shopName}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+                        @media print {
+                            @page { margin: 0; }
+                            body { margin: 0.5cm; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${invoiceContent}
+                    <script>
+                        window.onload = function() {
+                            window.print();
+                            setTimeout(function() {
+                                window.close();
+                            }, 500);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+        }
+
+        function printContent(html) {
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>প্রিন্ট - ${appState.settings.shopName}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+                        @media print {
+                            @page { margin: 0; }
+                            body { margin: 0.5cm; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${html}
+                    <script>
+                        window.onload = function() {
+                            window.print();
+                            setTimeout(function() {
+                                window.close();
+                            }, 500);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+        }
+
+        // ===== Backup Functions =====
+        function showBackupModal() {
+            document.getElementById('backupModal').classList.add('active');
+        }
+
+        function closeBackupModal() {
+            document.getElementById('backupModal').classList.remove('active');
+        }
+
+        function showDeleteConfirmation() {
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+        }
+
+        // ===== Export to Excel =====
+        function exportToExcel() {
+            const fromDate = document.getElementById('reportFromDate').value || 'সব তারিখ';
+            const toDate = document.getElementById('reportToDate').value || 'সব তারিখ';
+            
+            // Filter orders by date
+            const filteredOrders = appState.orders.filter(order => {
+                return (!fromDate || order.orderDate >= fromDate) && (!toDate || order.orderDate <= toDate);
+            });
+            
+            // Create CSV content
+            let csv = 'অর্ডার আইডি,গ্রাহক নাম,ফোন,আইটেম,মোট টাকা,অগ্রিম,বাকি,স্ট্যাটাস,অর্ডার তারিখ,ডেলিভারি তারিখ\n';
+            
+            filteredOrders.forEach(order => {
+                csv += `"${order.orderId}","${order.customerName}","${order.phone}","${order.itemName}",${order.totalAmount},${order.advancePaid},${order.dueAmount},"${order.status}","${order.orderDate}","${order.deliveryDate}"\n`;
+            });
+            
+            // Create and download file
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sales-report-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('রিপোর্ট এক্সেল ফাইল হিসাবে ডাউনলোড হয়েছে', 'success');
+        }
+
+        // ===== Settings Functions =====
+        function loadSettings() {
+            document.getElementById('shopName').value = appState.settings.shopName;
+            document.getElementById('shopAddress').value = appState.settings.address;
+            const phones = appState.settings.phone.split(',');
+            document.getElementById('shopPhone1').value = phones[0] || '';
+            document.getElementById('shopPhone2').value = phones[1] || '';
+        }
+
+        function saveSettings() {
+            appState.settings.shopName = document.getElementById('shopName').value;
+            appState.settings.address = document.getElementById('shopAddress').value;
+            appState.settings.phone = document.getElementById('shopPhone1').value + ',' + document.getElementById('shopPhone2').value;
+            
+            saveData();
+            showToast('সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে', 'success');
+        }
+
+        // ===== Initialize Application =====
+        function initializeApp() {
+            loadData();
+            updateDateTime();
+            updateDashboard();
+            loadRecentOrders();
+            renderOrders();
+            renderWorkers();
+            renderWorkerTransactions();
+            loadWorkersForSelect();
+            initializeSlider();
+            initializeReports();
+            initializeAccounting();
+            initializeSidebar();
+            loadSettings();
+            
+            // Update sidebar stats every minute
+            setInterval(updateSidebarStats, 60000);
+            
+            // Update date/time every minute
+            setInterval(updateDateTime, 60000);
+            
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function(e) {
+                    if (e.key === 'Enter') {
+                        renderOrders();
+                    }
+                });
+            }
+            
+            // Status filter change
+            const statusFilter = document.getElementById('statusFilter');
+            if (statusFilter) {
+                statusFilter.addEventListener('change', renderOrders);
+            }
+            
+            // Show welcome message if first time
+            if (!localStorage.getItem('tailor_welcome_shown')) {
+                setTimeout(() => {
+                    showToast('মেহেদী টেইলার্স ব্যবস্থাপনা সিস্টেমে স্বাগতম!', 'success');
+                    localStorage.setItem('tailor_welcome_shown', 'true');
+                }, 1000);
+            }
+        }
+
+        // ===== Android APK Interface =====
+        if (typeof Android !== 'undefined') {
+            // Save data to Android storage
+            Android.saveData(JSON.stringify(appState));
+            
+            // Load data from Android storage
+            const savedData = Android.loadData();
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    appState = data;
+                    saveData();
+                    initializeApp();
+                } catch (e) {
+                    console.error('Error loading data from Android:', e);
+                }
+            }
+            
+            // Print interface for Android
+            window.printInvoice = function(html) {
+                Android.printInvoice(html);
+            };
+        }
+
+        // Initialize the application
+        window.onload = initializeApp;
+
+        // Global error handler
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('Global error:', { message, source, lineno, colno, error });
+            showToast('একটি ত্রুটি ঘটেছে। দয়া করে পৃষ্ঠাটি রিফ্রেশ করুন।', 'error');
+            return true;
+        };
+
+        // ===== PWA Installation =====
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            
+            // Show install button
+            showInstallButton();
+        });
+
+        function showInstallButton() {
+            // You can add a custom install button in your UI
+            const installBtn = document.createElement('button');
+            installBtn.id = 'installBtn';
+            installBtn.className = 'btn btn-primary';
+            installBtn.innerHTML = '<i class="fas fa-download"></i> অ্যাপ ইনস্টল করুন';
+            installBtn.style.position = 'fixed';
+            installBtn.style.bottom = '20px';
+            installBtn.style.right = '20px';
+            installBtn.style.zIndex = '10000';
+            installBtn.onclick = installApp;
+            
+            document.body.appendChild(installBtn);
+        }
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                        showToast('অ্যাপ ইনস্টলেশন শুরু হয়েছে!', 'success');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    deferredPrompt = null;
+                    
+                    // Remove install button
+                    const installBtn = document.getElementById('installBtn');
+                    if (installBtn) installBtn.remove();
+                });
+            }
+        }
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // Check if app is running in standalone mode
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('Running in standalone mode');
+            // You can add standalone-specific behaviors here
+        }
+
+        // Detect if app is installed
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('App was installed');
+            showToast('অ্যাপ সফলভাবে ইনস্টল হয়েছে!', 'success');
+            
+            // Remove install button if exists
+            const installBtn = document.getElementById('installBtn');
+            if (installBtn) installBtn.remove();
+        });
+
+        // Online/Offline detection
+        window.addEventListener('online', () => {
+            showToast('ইন্টারনেট সংযোগ ফিরে পাওয়া গেছে', 'success');
+        });
+
+        window.addEventListener('offline', () => {
+            showToast('আপনি অফলাইনে আছেন', 'warning');
+        });
+    </script>
+</body>
+  </html>
